@@ -28,6 +28,13 @@ test('home page serves index.html with the nav bar', async () => {
   assert.match(html, /<nav class="navbar">/);
 });
 
+test('styles.css is served and includes a dark mode scheme', async () => {
+  const res = await fetch(`${baseUrl}/styles.css`);
+  assert.strictEqual(res.status, 200);
+  assert.match(res.headers.get('content-type'), /text\/css/);
+  assert.match(await res.text(), /prefers-color-scheme: dark/);
+});
+
 test('/about returns the about text', async () => {
   const res = await fetch(`${baseUrl}/about`);
   assert.strictEqual(res.status, 200);
