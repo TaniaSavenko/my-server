@@ -1,19 +1,29 @@
 /* ==========================================================
+   Berlin style
+   Bold grotesque type, stark black and off-white, sharp
+   corners, heavy lines, and one loud "signal" color.
+
+   Fonts (loaded in index.html from Google Fonts):
+   - Space Grotesk: headings, logo, nav
+   - Inter: body text
+   ========================================================== */
+
+/* ==========================================================
    Colors
    All colors live here as variables, so the whole page can
    switch between light and dark by changing just this block.
    ========================================================== */
 
-/* Light mode (the default) */
+/* Light mode (the default): black ink on off-white paper */
 :root {
   color-scheme: light;
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --accent: #4f46e5;
-  --accent-soft: #eef2ff;
+  --bg: #f2f1ec;
+  --surface: #f2f1ec;
+  --text: #0a0a0a;
+  --muted: #4a4a4a;
+  --border: #0a0a0a;
+  --signal: #d42a1a;      /* Bauhaus red highlight */
+  --on-signal: #ffffff;   /* text color on top of the signal color */
 }
 
 /* Dark mode: used automatically when the visitor's computer
@@ -21,13 +31,13 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --bg: #0b1120;
-    --surface: #111827;
-    --text: #e5e7eb;
-    --muted: #94a3b8;
-    --border: #1f2937;
-    --accent: #a5b4fc;
-    --accent-soft: #1e1b4b;
+    --bg: #0a0a0a;
+    --surface: #0a0a0a;
+    --text: #f2f1ec;
+    --muted: #a3a3a3;
+    --border: #f2f1ec;
+    --signal: #d42a1a;
+    --on-signal: #ffffff;
   }
 }
 
@@ -37,37 +47,61 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  /* Stack nav, main and footer, and keep the footer at the
+     bottom of the screen even when the page is short */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ==========================================================
    Nav bar
    ========================================================== */
+/* Sticky: stays pinned to the top of the screen while you scroll.
+   z-index keeps it above any page content that scrolls underneath. */
 .navbar {
   position: sticky;
   top: 0;
+  z-index: 100;
   background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
 }
 
 .nav-inner {
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
-  height: 64px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  font-family: "Space Grotesk", sans-serif;
   font-weight: 700;
   font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--text);
   text-decoration: none;
+}
+
+/* Small signal-colored square in front of the logo */
+.logo::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background: var(--signal);
+  border: 2px solid var(--border);
 }
 
 .nav-links {
@@ -79,44 +113,106 @@ body {
 .nav-links a {
   display: block;
   padding: 8px 14px;
-  border-radius: 8px;
-  color: var(--muted);
-  text-decoration: none;
+  font-family: "Space Grotesk", sans-serif;
   font-weight: 500;
-  transition: color 0.15s, background 0.15s;
-}
-
-.nav-links a:hover {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--text);
-  background: var(--accent-soft);
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
 
-/* The link for the page you're on */
+/* Hover: an outlined box */
+.nav-links a:hover {
+  border-color: var(--border);
+}
+
+/* The link for the page you're on: filled with the signal color */
 .nav-links a.active {
-  color: var(--accent);
-  background: var(--accent-soft);
+  background: var(--signal);
+  color: var(--on-signal);
+  border-color: var(--border);
 }
 
 /* ==========================================================
    Page content
    ========================================================== */
 main {
-  max-width: 960px;
+  flex: 1;              /* fill the space so the footer sits at the bottom */
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 80px 24px;
+  padding: 96px 24px;
 }
 
 h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 16px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  /* Scales with screen width so the title fits on one line,
+     from phones up to a 4rem maximum on big screens */
+  font-size: clamp(1.125rem, 6.5vw, 4rem);
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+/* Highlighted words in a heading, like a marker stroke */
+h1 mark {
+  background: var(--signal);
+  color: var(--on-signal);
+  padding: 0 0.12em;
 }
 
 .lead {
   font-size: 1.15rem;
   color: var(--muted);
   max-width: 560px;
+  padding-left: 16px;
+  border-left: 4px solid var(--signal);
+}
+
+/* ==========================================================
+   Footer
+   ========================================================== */
+.footer {
+  border-top: 2px solid var(--border);
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.footer-inner p {
+  color: var(--muted);
+}
+
+.footer-inner a {
+  padding: 6px 12px;
+  color: var(--text);
+  text-decoration: none;
+  border: 2px solid var(--border);
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+/* Hover: fill with the signal color, like the active nav link */
+.footer-inner a:hover {
+  background: var(--signal);
+  color: var(--on-signal);
 }
 
 /* ==========================================================
@@ -124,6 +220,16 @@ h1 {
    ========================================================== */
 @media (max-width: 480px) {
   .nav-inner { padding: 0 16px; }
-  .nav-links a { padding: 8px 10px; }
-  main { padding: 48px 16px; }
+  .logo { font-size: 1rem; }
+  .nav-links a { padding: 6px 8px; font-size: 0.8rem; letter-spacing: 0.04em; }
+  main { padding: 56px 16px; }
+  .footer-inner { padding: 16px; font-size: 0.75rem; letter-spacing: 0.04em; }
+}
+
+/* Very small phones: shrink the nav so all three links fit */
+@media (max-width: 360px) {
+  .logo { font-size: 0.85rem; gap: 6px; }
+  .logo::before { width: 10px; height: 10px; }
+  .nav-links { gap: 0; }
+  .nav-links a { padding: 5px 6px; font-size: 0.72rem; letter-spacing: 0.02em; }
 }

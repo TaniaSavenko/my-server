@@ -28,6 +28,13 @@ test('home page serves index.html with the nav bar', async () => {
   assert.match(html, /<nav class="navbar">/);
 });
 
+test('home page has a footer with copyright and GitHub link', async () => {
+  const html = await (await fetch(`${baseUrl}/`)).text();
+  assert.match(html, /<footer/);
+  assert.match(html, /&copy; 2026/);
+  assert.match(html, /href="https:\/\/github\.com\//);
+});
+
 test('styles.css is served and includes a dark mode scheme', async () => {
   const res = await fetch(`${baseUrl}/styles.css`);
   assert.strictEqual(res.status, 200);
