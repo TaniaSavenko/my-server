@@ -3,9 +3,7 @@ const app = express();
 app.use(express.static('public'));
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello, World! This is my first server.');
-});
+// The home page ("/") is public/index.html, served by express.static above.
 
 app.get('/about', (req, res) => {
   res.send('This is the about page. I built this server myself!');
@@ -27,6 +25,12 @@ app.get('/api/greeting', (req, res) => {
   res.json({ message: `Hello, ${name}! Welcome to my server.` });
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+// Only start listening when this file is run directly (node app.js).
+// When tests load it with require(), they start their own copy instead.
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+  });
+}
+
+module.exports = app;
